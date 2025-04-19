@@ -4,3 +4,8 @@ encore.gen.cue
 /.encore
 node_modules
 /encore.gen
+
+.DS_Store
+# React Router
+/.react-router/
+/build/
