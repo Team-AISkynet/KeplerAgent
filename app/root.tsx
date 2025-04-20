@@ -29,7 +29,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <NavLink
                   to='/'
                   className={({ isActive }) =>
-                    cn('font-bold text-xl tracking-tight', isActive && 'text-primary border-b-2 border-primary')
+                    cn(
+                      'font-bold text-xl tracking-tight',
+                      isActive && 'dark:text-white text-black border-b-2 border-primary'
+                    )
                   }
                 >
                   KeplerChat
@@ -40,7 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     className={({ isActive }) =>
                       cn(
                         'text-foreground/80 hover:text-foreground',
-                        isActive && 'text-primary border-b-2 border-primary'
+                        isActive && 'dark:text-white text-black border-b-2 border-primary'
                       )
                     }
                   >
