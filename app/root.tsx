@@ -1,75 +1,103 @@
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, NavLink } from 'react-router'
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
+import { cn } from './lib/utils'
 
-import type { Route } from "./+types/root";
-import "./app.css";
+import './app.css'
+import ThemeSwitcher from './components/ThemeSwitcher'
 
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-];
+// Get the publishable key from environment variable
+const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!CLERK_PUBLISHABLE_KEY) {
+  throw new Error('Missing Clerk Publishable Key')
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+      <html lang='en'>
+        <head>
+          <meta charSet='utf-8' />
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+          <Meta />
+          <Links />
+        </head>
+        <body className='bg-background text-foreground min-h-screen'>
+          <nav className='w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50'>
+            <div className='container mx-auto flex h-16 items-center justify-between px-4'>
+              <div className='flex items-center gap-4'>
+                <NavLink
+                  to='/'
+                  className={({ isActive }) =>
+                    cn('font-bold text-xl tracking-tight', isActive && 'text-primary border-b-2 border-primary')
+                  }
+                >
+                  KeplerChat
+                </NavLink>
+                <SignedIn>
+                  <NavLink
+                    to='/chat'
+                    className={({ isActive }) =>
+                      cn(
+                        'text-foreground/80 hover:text-foreground',
+                        isActive && 'text-primary border-b-2 border-primary'
+                      )
+                    }
+                  >
+                    Chat
+                  </NavLink>
+                </SignedIn>
+              </div>
+              <div className='flex items-center gap-4'>
+                <ThemeSwitcher />
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+                <SignedOut>
+                  <SignInButton mode='modal'>
+                    <button className='px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90'>
+                      Sign In
+                    </button>
+                  </SignInButton>
+                </SignedOut>
+              </div>
+            </div>
+          </nav>
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+        </body>
+      </html>
+    </ClerkProvider>
+  )
 }
 
 export default function App() {
-  return <Outlet />;
+  return <Outlet />
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+export function ErrorBoundary({ error }: { error: unknown }) {
+  let message = 'Oops!'
+  let details = 'An unexpected error occurred.'
+  let stack: string | undefined
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+    message = error.status === 404 ? '404' : 'Error'
+    details = error.status === 404 ? 'The requested page could not be found.' : error.statusText || details
   } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+    details = error.message
+    stack = error.stack
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <main className='pt-16 p-4 container mx-auto'>
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre className='w-full p-4 overflow-x-auto'>
           <code>{stack}</code>
         </pre>
       )}
     </main>
-  );
+  )
 }
