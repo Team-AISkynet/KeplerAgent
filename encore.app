@@ -1,10 +1,14 @@
 {
-	"id":   "keplerchat-ysa2",
+	"id": "keplerchat-ysa2",
 	"lang": "typescript",
 	"build": {
+		"worker_pooling": true,
 		"docker": {
 			"bundle_source": true
-		}
+		},
+		"experiments": [
+			"bun-runtime"
+		]
 	},
 	"global_cors": {
 		"debug": false,
