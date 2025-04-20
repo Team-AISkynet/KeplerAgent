@@ -1,3 +1,10 @@
-import { type RouteConfig, index } from "@react-router/dev/routes";
+import { type RouteConfig, route, index, layout } from '@react-router/dev/routes'
 
-export default [index("routes/home.tsx")] satisfies RouteConfig;
+export default [
+  // Root layout with all app-wide components (Clerk provider, navigation, etc)
+  // Index route for the home page
+  index('./routes/home.tsx'),
+
+  // Protected chat routes under auth layout
+  layout('./components/AuthMiddleware.tsx', [route('chat', './routes/chat.tsx')]),
+] satisfies RouteConfig

@@ -12,6 +12,9 @@ export default defineConfig({
       projects: ['./tsconfig.vite.json'],
     }),
   ],
+  build: {
+    outDir: 'api/frontend/build',
+  },
   resolve: {
     alias: {
       '~encore': path.resolve(__dirname, './encore.gen'),
