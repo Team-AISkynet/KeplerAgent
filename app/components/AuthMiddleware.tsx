@@ -13,7 +13,7 @@ export function AuthMiddleware({ children }: AuthMiddlewareProps) {
   }
 
   if (!isSignedIn) {
-    return <Navigate to='/sign-in' />
+    return <Navigate to='/' />
   }
 
   return <>{children}</>
