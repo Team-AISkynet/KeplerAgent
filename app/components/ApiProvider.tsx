@@ -45,7 +45,7 @@ export function ApiProvider({ children }: ApiProviderProps) {
     }
 
     initializeClient()
-  }, [getToken])
+  }, [])
 
   return <ApiContext.Provider value={client}>{children}</ApiContext.Provider>
 }
