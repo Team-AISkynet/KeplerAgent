@@ -5,14 +5,15 @@ import * as SwitchPrimitive from '@radix-ui/react-switch'
 import { cn } from '../lib/utils'
 
 export default function ThemeSwitcher() {
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(true)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
       const html = document.documentElement
-      setIsDark(html.classList.contains('dark'))
+      html.classList.add('dark')
+      setIsDark(true)
     }
   }, [])
 
