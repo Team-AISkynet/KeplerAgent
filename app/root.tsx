@@ -1,9 +1,12 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, NavLink } from 'react-router'
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
-import { cn } from './lib/utils'
+import { cn } from '@/app/lib/utils'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 
 import './app.css'
-import ThemeSwitcher from './components/ThemeSwitcher'
+import ThemeSwitcher from '@/app/components/ThemeSwitcher'
+import { ApiProvider } from '@/app/components/ApiProvider'
 
 // Get the publishable key from environment variable
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -15,62 +18,66 @@ if (!CLERK_PUBLISHABLE_KEY) {
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-      <html lang='en'>
-        <head>
-          <meta charSet='utf-8' />
-          <meta name='viewport' content='width=device-width, initial-scale=1' />
-          <Meta />
-          <Links />
-        </head>
-        <body className='bg-background text-foreground min-h-screen'>
-          <nav className='w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50'>
-            <div className='container mx-auto flex h-16 items-center justify-between px-4'>
-              <div className='flex items-center gap-4'>
-                <NavLink
-                  to='/'
-                  className={({ isActive }) =>
-                    cn(
-                      'font-bold text-xl tracking-tight',
-                      isActive && 'dark:text-white text-black border-b-2 border-primary'
-                    )
-                  }
-                >
-                  KeplerChat
-                </NavLink>
-                <SignedIn>
-                  <NavLink
-                    to='/chat'
-                    className={({ isActive }) =>
-                      cn(
-                        'text-foreground/80 hover:text-foreground',
-                        isActive && 'dark:text-white text-black border-b-2 border-primary'
-                      )
-                    }
-                  >
-                    Chat
-                  </NavLink>
-                </SignedIn>
-              </div>
-              <div className='flex items-center gap-4'>
-                <ThemeSwitcher />
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-                <SignedOut>
-                  <SignInButton mode='modal'>
-                    <button className='px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90'>
-                      Sign In
-                    </button>
-                  </SignInButton>
-                </SignedOut>
-              </div>
-            </div>
-          </nav>
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-        </body>
-      </html>
+      <Provider store={store}>
+        <ApiProvider>
+          <html lang='en'>
+            <head>
+              <meta charSet='utf-8' />
+              <meta name='viewport' content='width=device-width, initial-scale=1' />
+              <Meta />
+              <Links />
+            </head>
+            <body className='bg-background text-foreground min-h-screen'>
+              <nav className='w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50'>
+                <div className='container mx-auto flex h-16 items-center justify-between px-4'>
+                  <div className='flex items-center gap-4'>
+                    <NavLink
+                      to='/'
+                      className={({ isActive }) =>
+                        cn(
+                          'font-bold text-xl tracking-tight',
+                          isActive && 'dark:text-white text-black border-b-2 border-primary'
+                        )
+                      }
+                    >
+                      KeplerChat
+                    </NavLink>
+                    <SignedIn>
+                      <NavLink
+                        to='/chat'
+                        className={({ isActive }) =>
+                          cn(
+                            'text-foreground/80 hover:text-foreground',
+                            isActive && 'dark:text-white text-black border-b-2 border-primary'
+                          )
+                        }
+                      >
+                        Chat
+                      </NavLink>
+                    </SignedIn>
+                  </div>
+                  <div className='flex items-center gap-4'>
+                    <ThemeSwitcher />
+                    <SignedIn>
+                      <UserButton />
+                    </SignedIn>
+                    <SignedOut>
+                      <SignInButton mode='modal'>
+                        <button className='px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90'>
+                          Sign In
+                        </button>
+                      </SignInButton>
+                    </SignedOut>
+                  </div>
+                </div>
+              </nav>
+              {children}
+              <ScrollRestoration />
+              <Scripts />
+            </body>
+          </html>
+        </ApiProvider>
+      </Provider>
     </ClerkProvider>
   )
 }

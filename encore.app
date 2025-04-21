@@ -2,7 +2,7 @@
 	"id": "keplerchat-ysa2",
 	"lang": "typescript",
 	"build": {
-		"worker_pooling": true,
+		"worker_pooling": false,
 		"docker": {
 			"bundle_source": true
 		},
@@ -11,7 +11,6 @@
 		]
 	},
 	"global_cors": {
-		"debug": false,
 		"allow_headers": [
 			"*"
 		],

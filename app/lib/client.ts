@@ -31,6 +31,7 @@ export function PreviewEnv(pr: number | string): BaseURL {
  */
 export default class Client {
     public readonly chat: chat.ServiceClient
+    public readonly frontend: frontend.ServiceClient
     private readonly options: ClientOptions
     private readonly target: string
 
@@ -46,6 +47,7 @@ export default class Client {
         this.options = options ?? {}
         const base = new BaseClient(this.target, this.options)
         this.chat = new chat.ServiceClient(base)
+        this.frontend = new frontend.ServiceClient(base)
     }
 
     /**
@@ -118,6 +120,22 @@ export namespace chat {
          */
         public async ChatStream(): Promise<StreamInOut<InMessage, OutMessage>> {
             return await this.baseClient.createStreamInOut(`/chat`)
+        }
+    }
+}
+
+export namespace frontend {
+
+    export class ServiceClient {
+        private baseClient: BaseClient
+
+        constructor(baseClient: BaseClient) {
+            this.baseClient = baseClient
+            this.assets = this.assets.bind(this)
+        }
+
+        public async assets(path: string[]): Promise<void> {
+            await this.baseClient.callTypedAPI("HEAD", `/${path.map(encodeURIComponent).join("/")}`)
         }
     }
 }
