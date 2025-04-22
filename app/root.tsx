@@ -28,7 +28,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Links />
             </head>
             <body className='bg-background text-foreground min-h-screen'>
-              <nav className='w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50'>
+              <nav className='w-full border-b border-border/30 bg-black/10 backdrop-blur-[1px] supports-[backdrop-filter]:bg-black/5 sticky top-0 z-50'>
                 <div className='container mx-auto flex h-16 items-center justify-between px-4'>
                   <div className='flex items-center gap-4'>
                     <NavLink
@@ -40,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         )
                       }
                     >
-                      KeplerChat
+                      KeepItReal
                     </NavLink>
                     <SignedIn>
                       <NavLink
@@ -52,7 +52,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
                           )
                         }
                       >
-                        Chat
+                        Chat Charts
+                      </NavLink>
+                      <NavLink
+                        to='/chatmap'
+                        className={({ isActive }) =>
+                          cn(
+                            'text-foreground/80 hover:text-foreground',
+                            isActive && 'dark:text-white text-black border-b-2 border-primary'
+                          )
+                        }
+                      >
+                        Chat Map
                       </NavLink>
                     </SignedIn>
                   </div>
