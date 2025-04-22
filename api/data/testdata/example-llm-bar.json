@@ -1,0 +1,361 @@
+{
+  "query": "For each nearest_metro_en, what’s the average actual_area?",
+  "sql": "SELECT nearest_metro_en, AVG(actual_area) AS average_actual_area\nFROM prop_rent\nGROUP BY nearest_metro_en",
+  "result": [
+    {
+      "nearest_metro_en": "",
+      "average_actual_area": 1069.411919553004
+    },
+    {
+      "nearest_metro_en": "Abu Baker Al Siddique Metro Station",
+      "average_actual_area": 46559.787854487135
+    },
+    {
+      "nearest_metro_en": "Abu Hail Metro Station",
+      "average_actual_area": 815.9683925972136
+    },
+    {
+      "nearest_metro_en": "ADCB Metro Station",
+      "average_actual_area": 547.9876936134098
+    },
+    {
+      "nearest_metro_en": "Airport Free Zone",
+      "average_actual_area": 561.7912916056102
+    },
+    {
+      "nearest_metro_en": "Airport Terminal 1 Metro Station",
+      "average_actual_area": 1076.3289183222957
+    },
+    {
+      "nearest_metro_en": "Al Fahidi Metro Station",
+      "average_actual_area": 306.6896290688872
+    },
+    {
+      "nearest_metro_en": "Al Ghubaiba Metro Station",
+      "average_actual_area": 1089.2343216531897
+    },
+    {
+      "nearest_metro_en": "Al Jadaf Metro Station",
+      "average_actual_area": 120.6802103250478
+    },
+    {
+      "nearest_metro_en": "Al Jafiliya Metro Station",
+      "average_actual_area": 462.85073779795687
+    },
+    {
+      "nearest_metro_en": "Al Nahda Metro Station",
+      "average_actual_area": 363.85296442687746
+    },
+    {
+      "nearest_metro_en": "Al Qiyadah Metro Station",
+      "average_actual_area": 319.9378881987578
+    },
+    {
+      "nearest_metro_en": "Al Qusais Metro Station",
+      "average_actual_area": 2969.0657198551935
+    },
+    {
+      "nearest_metro_en": "Al Ras Metro Station",
+      "average_actual_area": 1115.0026905829595
+    },
+    {
+      "nearest_metro_en": "Al Rigga Metro Station",
+      "average_actual_area": 550.621706864564
+    },
+    {
+      "nearest_metro_en": "Al Sufouh",
+      "average_actual_area": 355.565466875326
+    },
+    {
+      "nearest_metro_en": "Baniyas Square Metro Station",
+      "average_actual_area": 35495.339257002626
+    },
+    {
+      "nearest_metro_en": "Buj Khalifa Dubai Mall Metro Station",
+      "average_actual_area": 119.50251344657278
+    },
+    {
+      "nearest_metro_en": "Burjuman Metro Station",
+      "average_actual_area": 387.44567712318286
+    },
+    {
+      "nearest_metro_en": "Business Bay Metro Station",
+      "average_actual_area": 37022.41009974877
+    },
+    {
+      "nearest_metro_en": "Creek Metro Station",
+      "average_actual_area": 1461.6623853211008
+    },
+    {
+      "nearest_metro_en": "Damac Properties",
+      "average_actual_area": 205.5240245537289
+    },
+    {
+      "nearest_metro_en": "DANUBE Metro Station",
+      "average_actual_area": 563.0385991542882
+    },
+    {
+      "nearest_metro_en": "Deira City Centre",
+      "average_actual_area": 334.6564376250834
+    },
+    {
+      "nearest_metro_en": "Dubai Internet City",
+      "average_actual_area": 34896.47719265715
+    },
+    {
+      "nearest_metro_en": "Dubai Marina",
+      "average_actual_area": 108.48307727850295
+    },
+    {
+      "nearest_metro_en": "Emirates Metro Station",
+      "average_actual_area": 4561.541481481481
+    },
+    {
+      "nearest_metro_en": "Emirates Towers Metro Station",
+      "average_actual_area": 417.45996441281136
+    },
+    {
+      "nearest_metro_en": "ENERGY Metro Station",
+      "average_actual_area": 267.0997455470738
+    },
+    {
+      "nearest_metro_en": "Etisalat Metro Station",
+      "average_actual_area": 1680.0378316032295
+    },
+    {
+      "nearest_metro_en": "Financial Centre",
+      "average_actual_area": 439.6051792828685
+    },
+    {
+      "nearest_metro_en": "First Abu Dhabi Bank Metro Station",
+      "average_actual_area": 601.0579884679951
+    },
+    {
+      "nearest_metro_en": "GGICO Metro Station",
+      "average_actual_area": 862.939969214982
+    },
+    {
+      "nearest_metro_en": "Harbour Tower",
+      "average_actual_area": 187.56606934731934
+    },
+    {
+      "nearest_metro_en": "Healthcare City Metro Station",
+      "average_actual_area": 489.0707126948775
+    },
+    {
+      "nearest_metro_en": "Ibn Battuta Metro Station",
+      "average_actual_area": 29558.78452479529
+    },
+    {
+      "nearest_metro_en": "Jumeirah Beach Resdency",
+      "average_actual_area": 136.44380179077916
+    },
+    {
+      "nearest_metro_en": "Jumeirah Beach Residency",
+      "average_actual_area": 125.18370593653187
+    },
+    {
+      "nearest_metro_en": "Jumeirah Lakes Towers",
+      "average_actual_area": 142.6236171535115
+    },
+    {
+      "nearest_metro_en": "Knowledge Village",
+      "average_actual_area": 217.19443133553563
+    },
+    {
+      "nearest_metro_en": "Marina Mall Metro Station",
+      "average_actual_area": 185.54645605508304
+    },
+    {
+      "nearest_metro_en": "Marina Towers",
+      "average_actual_area": 133.23334331486748
+    },
+    {
+      "nearest_metro_en": "Media City",
+      "average_actual_area": 405.45569620253167
+    },
+    {
+      "nearest_metro_en": "Mina Seyahi",
+      "average_actual_area": 166.6293600461228
+    },
+    {
+      "nearest_metro_en": "Nakheel Metro Station",
+      "average_actual_area": 163.71989048303712
+    },
+    {
+      "nearest_metro_en": "Noor Bank Metro Station",
+      "average_actual_area": 2067.1151443942863
+    },
+    {
+      "nearest_metro_en": "Oud Metha Metro Station",
+      "average_actual_area": 4468.760230179028
+    },
+    {
+      "nearest_metro_en": "Palm Deira Metro Stations",
+      "average_actual_area": 23008.646058580696
+    },
+    {
+      "nearest_metro_en": "Palm Jumeirah",
+      "average_actual_area": 229.4878230048022
+    },
+    {
+      "nearest_metro_en": "Rashidiya Metro Station",
+      "average_actual_area": 55635.97720845718
+    },
+    {
+      "nearest_metro_en": "Salah Al Din Metro Station",
+      "average_actual_area": 52717.13335418622
+    },
+    {
+      "nearest_metro_en": "Sharaf Dg Metro Station",
+      "average_actual_area": 104182.27227791701
+    },
+    {
+      "nearest_metro_en": "STADIUM Metro Station",
+      "average_actual_area": 1200695.5487841489
+    },
+    {
+      "nearest_metro_en": "Terminal 3 ",
+      "average_actual_area": 1813.3639291465379
+    },
+    {
+      "nearest_metro_en": "Trade Centre Metro Station",
+      "average_actual_area": 176929.60417768377
+    },
+    {
+      "nearest_metro_en": "UAE Exchange Metro Station",
+      "average_actual_area": 308.494238424471
+    },
+    {
+      "nearest_metro_en": "Union Metro Station",
+      "average_actual_area": 177.23195435092725
+    }
+  ],
+  "visualization": {
+    "type": "tool_call",
+    "tool_name": "draw_chart",
+    "args": {
+      "chart_type": "bar",
+      "title": "Average Actual Area by Metro Station",
+      "labels": [
+        "",
+        "Abu Baker Al Siddique Metro Station",
+        "Abu Hail Metro Station",
+        "ADCB Metro Station",
+        "Airport Free Zone",
+        "Airport Terminal 1 Metro Station",
+        "Al Fahidi Metro Station",
+        "Al Ghubaiba Metro Station",
+        "Al Jadaf Metro Station",
+        "Al Jafiliya Metro Station",
+        "Al Nahda Metro Station",
+        "Al Qiyadah Metro Station",
+        "Al Qusais Metro Station",
+        "Al Ras Metro Station",
+        "Al Rigga Metro Station",
+        "Al Sufouh",
+        "Baniyas Square Metro Station",
+        "Buj Khalifa Dubai Mall Metro Station",
+        "Burjuman Metro Station",
+        "Business Bay Metro Station",
+        "Creek Metro Station",
+        "Damac Properties",
+        "DANUBE Metro Station",
+        "Deira City Centre",
+        "Dubai Internet City",
+        "Dubai Marina",
+        "Emirates Metro Station",
+        "Emirates Towers Metro Station",
+        "ENERGY Metro Station",
+        "Etisalat Metro Station",
+        "Financial Centre",
+        "First Abu Dhabi Bank Metro Station",
+        "GGICO Metro Station",
+        "Harbour Tower",
+        "Healthcare City Metro Station",
+        "Ibn Battuta Metro Station",
+        "Jumeirah Beach Resdency",
+        "Jumeirah Beach Residency",
+        "Jumeirah Lakes Towers",
+        "Knowledge Village",
+        "Marina Mall Metro Station",
+        "Marina Towers",
+        "Media City",
+        "Mina Seyahi",
+        "Nakheel Metro Station",
+        "Noor Bank Metro Station",
+        "Oud Metha Metro Station",
+        "Palm Deira Metro Stations",
+        "Palm Jumeirah",
+        "Rashidiya Metro Station",
+        "Salah Al Din Metro Station",
+        "Sharaf Dg Metro Station",
+        "STADIUM Metro Station",
+        "Terminal 3 ",
+        "Trade Centre Metro Station",
+        "UAE Exchange Metro Station",
+        "Union Metro Station"
+      ],
+      "data": [
+        1069.411919553004,
+        46559.787854487135,
+        815.9683925972136,
+        547.9876936134098,
+        561.7912916056102,
+        1076.3289183222957,
+        306.6896290688872,
+        1089.2343216531897,
+        120.6802103250478,
+        462.85073779795687,
+        363.85296442687746,
+        319.9378881987578,
+        2969.0657198551935,
+        1115.0026905829595,
+        550.621706864564,
+        355.565466875326,
+        35495.339257002626,
+        119.50251344657278,
+        387.44567712318286,
+        37022.41009974877,
+        1461.6623853211008,
+        205.5240245537289,
+        563.0385991542882,
+        334.6564376250834,
+        34896.47719265715,
+        108.48307727850295,
+        4561.541481481481,
+        417.45996441281136,
+        267.0997455470738,
+        1680.0378316032295,
+        439.6051792828685,
+        601.0579884679951,
+        862.939969214982,
+        187.56606934731934,
+        489.0707126948775,
+        29558.78452479529,
+        136.44380179077916,
+        125.18370593653187,
+        142.6236171535115,
+        217.19443133553563,
+        185.54645605508304,
+        133.23334331486748,
+        405.45569620253167,
+        166.6293600461228,
+        163.71989048303712,
+        2067.1151443942863,
+        4468.760230179028,
+        23008.646058580696,
+        229.4878230048022,
+        55635.97720845718,
+        52717.13335418622,
+        104182.27227791701,
+        1200695.5487841489,
+        1813.3639291465379,
+        176929.60417768377,
+        308.494238424471,
+        177.23195435092725
+      ]
+    }
+  },
+  "answer": "The average actual area for each nearest metro station varies significantly, with the highest being 1,200,695.55 at STADIUM Metro Station and the lowest at 120.68 at Al Jadaf Metro Station."
+}

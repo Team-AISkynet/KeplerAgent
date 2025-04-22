@@ -16,10 +16,10 @@ interface OutMessage {
   isComplete?: boolean
 }
 
-// ChatStream is a streaming API endpoint that allows a user to chat with a chatbot.
-// It requires authentication.
-export const ChatStream = api.streamInOut<InMessage, OutMessage>(
-  { path: '/chat', expose: true, auth: true },
+// ChatLLStream is a streaming API endpoint that allows a user to chat with a chatbot.
+// It requires authentication. It uses a langgraph setup
+export const ChatLLMStream = api.streamInOut<InMessage, OutMessage>(
+  { path: '/chat-llm', expose: true, auth: true },
   async (stream) => {
     const agentExecutor = getGraphAgentExecutor()
     const user = getAuthData()!
@@ -60,53 +60,54 @@ export const ChatStream = api.streamInOut<InMessage, OutMessage>(
     }
   }
 )
-// export const ChatStream = api.streamInOut<InMessage, OutMessage>(
-//   { path: '/chat', expose: true, auth: true },
-//   async (stream) => {
-//     const agentExecutor = getAgentExecutor()
-//     const user = getAuthData()!
-//     const chatHistory: (HumanMessage | AIMessage)[] = []
 
-//     log.info('ChatStream sending welcome message', { user })
-//     await stream.send({
-//       text: `Hi! I'm your AI assistant. I can help you with information and answer questions.`,
-//       isComplete: true,
-//     })
+// ChatAPIStream is a streaming API endpoint that allows a user to chat with a chatbot.
+// It requires authentication. It uses a backend pything API setup
 
-//     for await (const chatMessage of stream) {
-//       log.info('ChatStream received message', { chatMessage })
+export const ChatAPIStream = api.streamInOut<InMessage, OutMessage>(
+  { path: '/chat-api', expose: true, auth: true },
+  async (stream) => {
+    // curl --location 'https://real-estate-query-api.darkube.app/rent-history' \
+    // --header 'Content-Type: application/json' \
+    // --data '{
+    //            "question": "For each nearest_metro_en, what’s the average actual_area?"
+    //          }'
+    const agentExecutor = getGraphAgentExecutor()
+    const user = getAuthData()!
+    const chatHistory: (HumanMessage | AIMessage)[] = []
 
-//       const userMessage = new HumanMessage(chatMessage.text)
-//       chatHistory.push(userMessage)
+    log.info('ChatStream sending welcome message', { user })
+    await stream.send({
+      text: `Hi! I'm your AI assistant. I can help you with information and answer questions.`,
+      isComplete: true,
+    })
 
-//       try {
-//         // Invoke the agent with chat history
-//         const result = await agentExecutor.invoke({
-//           input: chatMessage.text,
-//           chat_history: formatChatHistory(chatHistory),
-//         })
+    for await (const chatMessage of stream) {
+      log.info('ChatStream received message', { chatMessage })
 
-//         log.info('ChatStream result', { result })
+      const userMessage = new HumanMessage(chatMessage.text)
+      chatHistory.push(userMessage)
 
-//         // Clean the output before creating AI message and sending response
-//         const cleanedOutput = cleanOutput(result.output)
+      try {
+        const agentNextState = await agentExecutor.invoke(
+          { messages: [new HumanMessage(chatMessage.text)] },
+          { configurable: { thread_id: user.userID } }
+        )
 
-//         // Add AI response to chat history
-//         const aiMessage = new AIMessage(cleanedOutput)
-//         chatHistory.push(aiMessage)
+        const responseText = agentNextState.messages[agentNextState.messages.length - 1].content
 
-//         // Send the cleaned response
-//         await stream.send({
-//           text: cleanedOutput,
-//           isComplete: true,
-//         })
-//       } catch (error) {
-//         log.error('Error in ChatStream', { error })
-//         await stream.send({
-//           text: 'I apologize, but I encountered an error processing your request. Please try again.',
-//           isComplete: true,
-//         })
-//       }
-//     }
-//   }
-// )
+        // Send the cleaned response
+        await stream.send({
+          text: responseText,
+          isComplete: true,
+        })
+      } catch (error) {
+        log.error('Error in ChatStream', { error })
+        await stream.send({
+          text: 'I apologize, but I encountered an error processing your request. Please try again.',
+          isComplete: true,
+        })
+      }
+    }
+  }
+)

@@ -1,20 +1,19 @@
-import { configureStore, EnhancedStore } from '@reduxjs/toolkit'
+import { configureStore, type EnhancedStore } from '@reduxjs/toolkit'
+import chartReducer from './chartSlice'
 import chatReducer from './chatSlice'
 import { chatMiddleware } from './chatMiddleware'
 
 // Using type assertion to avoid circular reference
 export const store = configureStore({
   reducer: {
+    charts: chartReducer,
     chat: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types
         ignoredActions: ['chat/setStream'],
-        // Ignore these field paths in all actions
         ignoredActionPaths: ['payload.stream'],
-        // Ignore these paths in the state
         ignoredPaths: ['chat.stream'],
       },
     }).concat(chatMiddleware),

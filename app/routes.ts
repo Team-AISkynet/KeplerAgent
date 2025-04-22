@@ -6,5 +6,8 @@ export default [
   index('./routes/home.tsx'),
 
   // Protected chat routes under auth layout
-  layout('./components/AuthMiddleware.tsx', [route('chat', './routes/chat.tsx')]),
+  layout('./components/AuthMiddleware.tsx', [
+    route('chat', './routes/chat.tsx'),
+    route('chatmap', './routes/chat-map.tsx'),
+  ]),
 ] satisfies RouteConfig

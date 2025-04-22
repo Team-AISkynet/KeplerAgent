@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react'
-import { ChatBubble, ChatBubbleMessage, ChatBubbleAvatar } from '../components/ui/chat/chat-bubble'
+import { ChatBubble, ChatBubbleMessage } from '../components/ui/chat/chat-bubble'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { addMessage, setConnectionStatus, setError, setStream } from '../store/chatSlice'
 import { useApi } from './ApiProvider'
-import { Bot, User } from 'lucide-react'
+import { Bot, User, Loader2 } from 'lucide-react'
 
 // Define the ChatMessage type
 interface ChatMessage {
@@ -15,22 +15,22 @@ interface ChatMessage {
 
 export function ChatPanel() {
   const dispatch = useAppDispatch()
-  const { messages } = useAppSelector((state) => state.chat)
+  const { messages, isConnected, error } = useAppSelector((state) => state.chat)
   const [inputMessage, setInputMessage] = React.useState('')
+  const [isInitializing, setIsInitializing] = React.useState(true)
   const api = useApi()
-  // Using any here since we just need to track the instance for cleanup
   const streamRef = useRef<any>(null)
 
   useEffect(() => {
     if (!api) return
 
     let isSubscribed = true
+    setIsInitializing(true)
 
     const startChat = async () => {
       try {
-        const chatStream = await api.chat.ChatStream()
+        const chatStream = await api.chat.ChatAPIStream()
 
-        // Only set the stream if the component is still mounted
         if (!isSubscribed) {
           chatStream.socket.close()
           return
@@ -39,6 +39,7 @@ export function ChatPanel() {
         streamRef.current = chatStream
         dispatch(setStream(chatStream))
         dispatch(setConnectionStatus(true))
+        setIsInitializing(false)
 
         chatStream.socket.on('error', (event) => {
           console.error('ChatStream error', event)
@@ -77,6 +78,7 @@ export function ChatPanel() {
         if (isSubscribed) {
           dispatch(setError('Failed to establish chat connection'))
           dispatch(setStream(null))
+          setIsInitializing(false)
         }
       }
     }
@@ -85,7 +87,6 @@ export function ChatPanel() {
 
     return () => {
       isSubscribed = false
-      // Close the socket connection if it exists
       if (streamRef.current?.socket) {
         streamRef.current.socket.close()
         streamRef.current = null
@@ -97,7 +98,7 @@ export function ChatPanel() {
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!inputMessage.trim() || !api) return
+    if (!inputMessage.trim() || !api || !isConnected) return
 
     dispatch({
       type: 'chat/sendToStream',
@@ -116,13 +117,30 @@ export function ChatPanel() {
     setInputMessage('')
   }
 
-  // Add ref for message container
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Scroll to bottom when new messages are added
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  if (isInitializing) {
+    return (
+      <div className='flex flex-col h-full items-center justify-center'>
+        <Loader2 className='w-8 h-8 animate-spin text-primary' />
+        <p className='mt-2 text-sm text-foreground/70'>Connecting to chat...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='flex flex-col h-full items-center justify-center'>
+        <div className='p-4 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 rounded-lg text-sm'>
+          {error}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='flex flex-col h-full relative'>
@@ -156,8 +174,9 @@ export function ChatPanel() {
               type='text'
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder='Type your message...'
-              className='flex-1 px-4 py-3 bg-white dark:bg-black/50 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none text-sm'
+              placeholder={isConnected ? 'Type your message...' : 'Connecting...'}
+              disabled={!isConnected}
+              className='flex-1 px-4 py-3 bg-white dark:bg-black/50 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none text-sm disabled:opacity-50'
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault()
@@ -167,7 +186,8 @@ export function ChatPanel() {
             />
             <button
               type='submit'
-              className='px-8 py-3 bg-primary/80 text-black font-medium hover:bg-primary transition-colors text-sm'
+              disabled={!isConnected}
+              className='px-8 py-3 bg-primary/80 text-black font-medium hover:bg-primary transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed'
             >
               Send
             </button>
