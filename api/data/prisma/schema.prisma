@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://keplerchat-ysa2:shadow-d021i6pv35uf615n3jrg@127.0.0.1:9500/hackathon?sslmode=disable"
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  name    String
+  surname String
+}

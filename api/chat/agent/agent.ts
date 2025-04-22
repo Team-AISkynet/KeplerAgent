@@ -6,7 +6,6 @@ import { TavilySearch } from '@langchain/tavily'
 import { BufferMemory } from 'langchain/memory'
 import log from 'encore.dev/log'
 import { AIMessage, HumanMessage } from '@langchain/core/messages'
-import { Tool } from '@langchain/core/tools'
 
 // Define types for our agent
 interface AgentState {
@@ -22,10 +21,11 @@ async function setupAgent(): Promise<AgentExecutor> {
 
   log.info('Setting up agent with prompt', { prompt: promptWithChat.template })
 
-  // Initialize tools with proper typing
+  // Initialize tools array with our configured tool
   const tools = [
     new TavilySearch({
       maxResults: 1,
+      topic: 'general',
     }),
   ]
 
@@ -58,6 +58,7 @@ async function setupAgent(): Promise<AgentExecutor> {
     memory,
     verbose: true, // Enable verbose mode for debugging
     maxIterations: 3, // Limit the number of tool use iterations
+    returnIntermediateSteps: true,
   })
 
   return agentExecutorWithChat
@@ -81,4 +82,10 @@ function formatChatHistory(messages: (HumanMessage | AIMessage)[]): string {
     .join('\n')
 }
 
-export { setupAgent, getAgentExecutor, formatChatHistory }
+// Add a helper function to clean the output
+function cleanOutput(output: string): string {
+  // Remove code block markers and any trailing/leading whitespace
+  return output.replace(/```/g, '').trim()
+}
+
+export { setupAgent, getAgentExecutor, formatChatHistory, cleanOutput }
