@@ -46,7 +46,7 @@ interface OutAPIMessage {
 // ChatLLStream is a streaming API endpoint that allows a user to chat with a chatbot.
 // It requires authentication. It uses a langgraph setup
 export const ChatLLMStream = api.streamInOut<InMessage, OutMessage>(
-  { path: '/chat-llm', expose: true, auth: true },
+  { path: '/api/chat-llm', expose: true, auth: true },
   async (stream) => {
     const agentExecutor = getGraphAgentExecutor()
     const user = getAuthData()!
@@ -86,7 +86,7 @@ export const ChatLLMStream = api.streamInOut<InMessage, OutMessage>(
 // It requires authentication. It uses a backend pything API setup
 
 export const ChatAPIStream = api.streamInOut<InMessage, OutAPIMessage>(
-  { path: '/chat-api', expose: true, auth: true },
+  { path: '/api/chat-api', expose: true, auth: true },
   async (stream) => {
     const user = getAuthData()!
     const chatHistory: (HumanMessage | AIMessage)[] = []

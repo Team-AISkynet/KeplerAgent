@@ -12,7 +12,7 @@ export const regions = api.raw(
   {
     expose: true,
     method: 'GET',
-    path: '/data/geojson/:name',
+    path: '/api/data/geojson/:name',
   },
   async (req, resp) => {
     const { name } = (currentRequest() as APICallMeta).pathParams

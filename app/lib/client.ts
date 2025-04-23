@@ -150,7 +150,7 @@ export namespace chat {
         }
 
         public async ChatAPIStream(): Promise<StreamInOut<InMessage, OutAPIMessage>> {
-            return await this.baseClient.createStreamInOut(`/chat-api`)
+            return await this.baseClient.createStreamInOut(`/api/chat-api`)
         }
 
         /**
@@ -158,7 +158,7 @@ export namespace chat {
          * It requires authentication. It uses a langgraph setup
          */
         public async ChatLLMStream(): Promise<StreamInOut<InMessage, OutMessage>> {
-            return await this.baseClient.createStreamInOut(`/chat-llm`)
+            return await this.baseClient.createStreamInOut(`/api/chat-llm`)
         }
     }
 }
@@ -238,7 +238,7 @@ export namespace data {
          */
         public async createProperty(params: CreatePropertyParams): Promise<Property> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("POST", `/properties`, JSON.stringify(params))
+            const resp = await this.baseClient.callTypedAPI("POST", `/api/properties`, JSON.stringify(params))
             return await resp.json() as Property
         }
 
@@ -252,7 +252,7 @@ export namespace data {
          */
         public async getProperty(id: number): Promise<GetPropertyResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("GET", `/properties/${encodeURIComponent(id)}`)
+            const resp = await this.baseClient.callTypedAPI("GET", `/api/properties/${encodeURIComponent(id)}`)
             return await resp.json() as GetPropertyResponse
         }
 
@@ -264,12 +264,12 @@ export namespace data {
          */
         public async listProperties(): Promise<ListPropertiesResponse> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("GET", `/properties`)
+            const resp = await this.baseClient.callTypedAPI("GET", `/api/properties`)
             return await resp.json() as ListPropertiesResponse
         }
 
         public async regions(method: "GET", name: string, body?: BodyInit, options?: CallParameters): Promise<globalThis.Response> {
-            return this.baseClient.callAPI(method, `/data/geojson/${encodeURIComponent(name)}`, body, options)
+            return this.baseClient.callAPI(method, `/api/data/geojson/${encodeURIComponent(name)}`, body, options)
         }
 
         /**
@@ -283,7 +283,7 @@ export namespace data {
          */
         public async removeProperty(id: number): Promise<Property> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("DELETE", `/properties/${encodeURIComponent(id)}`)
+            const resp = await this.baseClient.callTypedAPI("DELETE", `/api/properties/${encodeURIComponent(id)}`)
             return await resp.json() as Property
         }
 
@@ -297,7 +297,7 @@ export namespace data {
          */
         public async updateProperty(id: number, params: UpdatePropertyParams): Promise<Property> {
             // Now make the actual call to the API
-            const resp = await this.baseClient.callTypedAPI("PUT", `/properties/${encodeURIComponent(id)}`, JSON.stringify(params))
+            const resp = await this.baseClient.callTypedAPI("PUT", `/api/properties/${encodeURIComponent(id)}`, JSON.stringify(params))
             return await resp.json() as Property
         }
     }

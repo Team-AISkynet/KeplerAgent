@@ -86,7 +86,7 @@ type UpdatePropertyParams = {
  * @throws {Error} If required fields are missing or invalid
  */
 export const createProperty = api(
-  { method: 'POST', expose: true, path: '/properties' },
+  { method: 'POST', expose: true, path: '/api/properties' },
   async (params: CreatePropertyParams): Promise<Property> => {
     return await prisma.property.create({
       data: {
@@ -104,7 +104,7 @@ export const createProperty = api(
  * @returns {Promise<ListPropertiesResponse>} Object containing array of properties
  */
 export const listProperties = api(
-  { method: 'GET', expose: true, path: '/properties', tags: ['properties'] },
+  { method: 'GET', expose: true, path: '/api/properties', tags: ['properties'] },
   async (): Promise<ListPropertiesResponse> => {
     const properties = await prisma.property.findMany()
     return { properties }
@@ -120,7 +120,7 @@ export const listProperties = api(
  * @returns {Promise<GetPropertyResponse>} Object containing the property or null
  */
 export const getProperty = api(
-  { method: 'GET', path: '/properties/:id', expose: true, tags: ['properties'] },
+  { method: 'GET', path: '/api/properties/:id', expose: true, tags: ['properties'] },
   async ({ id }: { id: number }): Promise<GetPropertyResponse> => {
     const property = await prisma.property.findUnique({
       where: { id },
@@ -138,7 +138,7 @@ export const getProperty = api(
  * @throws {Error} If the property is not found or if the update data is invalid
  */
 export const updateProperty = api(
-  { method: 'PUT', path: '/properties/:id', expose: true, tags: ['properties'] },
+  { method: 'PUT', path: '/api/properties/:id', expose: true, tags: ['properties'] },
   async (params: UpdatePropertyParams): Promise<Property> => {
     const { id, ...updateData } = params
 
@@ -166,7 +166,7 @@ export const updateProperty = api(
  * @throws {Error} If the property is not found
  */
 export const removeProperty = api(
-  { method: 'DELETE', path: '/properties/:id', expose: true },
+  { method: 'DELETE', path: '/api/properties/:id', expose: true },
   async ({ id }: { id: number }): Promise<Property> => {
     return await prisma.property.delete({
       where: { id },
