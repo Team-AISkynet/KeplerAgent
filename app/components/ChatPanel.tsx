@@ -4,6 +4,9 @@ import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { addMessage, setConnectionStatus, setError, setStream } from '../store/chatSlice'
 import { useApi } from './ApiProvider'
 import { Bot, User, Loader2 } from 'lucide-react'
+import { addChart } from '../store/chartSlice'
+import { v4 as uuidv4 } from 'uuid'
+import { chat } from '~encore/clients'
 
 // Define the ChatMessage type
 interface ChatMessage {
@@ -63,6 +66,21 @@ export function ChatPanel() {
           if (!msg) break
 
           if (isSubscribed) {
+            // if the message is a visualization, add it to the state
+            if (msg.visualization && msg.visualization.type === 'tool_call') {
+              const v = msg.visualization!
+              dispatch(
+                addChart({
+                  id: uuidv4(),
+                  type: v.args.chart_type as 'line' | 'bar',
+                  labels: v.args.labels,
+                  data: v.args.data,
+                  title: v.args.title,
+                  answer: msg.text,
+                })
+              )
+            }
+
             dispatch(
               addMessage({
                 id: Date.now().toString(),
