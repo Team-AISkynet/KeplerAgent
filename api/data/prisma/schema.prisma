@@ -15,16 +15,27 @@ model User {
 }
 
 model Property {
-  id           Int      @id @default(autoincrement())
-  address1     String
-  area         String
-  city         String
-  purchaseDate DateTime
-  developer    String
-  buyPrice     Int
-  rentPrice    Int
-  bedrooms     Int
-  bathrooms    Int
-  receptions   Int
-  size         Int
+  id            Int                 @id @default(autoincrement())
+  address1      String
+  area          String
+  city          String
+  purchaseDate  DateTime
+  developer     String
+  buyPrice      Int
+  rentPrice     Int
+  bedrooms      Int
+  bathrooms     Int
+  receptions    Int
+  size          Int
+  ProperyUpdate ProperyRentUpdate[]
+}
+
+model ProperyRentUpdate {
+  id         Int      @id @default(autoincrement())
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  updateDate DateTime
+  oldRent    Int
+  newRent    Int
+  reason     String
 }

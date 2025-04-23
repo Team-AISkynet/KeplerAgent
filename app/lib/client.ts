@@ -199,9 +199,16 @@ export namespace data {
         bathrooms: number
         receptions: number
         size: number
+        lastRentUpdate?: {
+            updateDate: string
+            oldRent: number
+            newRent: number
+            reason: string
+        } | null
     }
 
     export interface UpdatePropertyParams {
+        reason: string
         address1?: string
         area?: string
         city?: string

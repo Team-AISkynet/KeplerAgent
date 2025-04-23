@@ -19,6 +19,12 @@ interface Property {
   bathrooms: number
   receptions: number
   size: number
+  lastRentUpdate?: {
+    updateDate: Date
+    oldRent: number
+    newRent: number
+    reason: string
+  } | null
 }
 
 /**
@@ -75,6 +81,7 @@ interface CreatePropertyParams {
  */
 type UpdatePropertyParams = {
   id: number
+  reason: string
 } & Partial<Omit<CreatePropertyParams, 'id'>>
 
 /**
@@ -106,8 +113,31 @@ export const createProperty = api(
 export const listProperties = api(
   { method: 'GET', expose: true, path: '/api/properties', tags: ['properties'] },
   async (): Promise<ListPropertiesResponse> => {
-    const properties = await prisma.property.findMany()
-    return { properties }
+    const properties = await prisma.property.findMany({
+      include: {
+        ProperyUpdate: {
+          orderBy: {
+            updateDate: 'desc',
+          },
+          take: 1,
+          select: {
+            updateDate: true,
+            oldRent: true,
+            newRent: true,
+            reason: true,
+          },
+        },
+      },
+    })
+
+    // Transform the response to match our Property interface
+    const transformedProperties = properties.map((property) => ({
+      ...property,
+      lastRentUpdate: property.ProperyUpdate[0] || null,
+      ProperyUpdate: undefined, // Remove the original ProperyUpdate array
+    }))
+
+    return { properties: transformedProperties }
   }
 )
 
@@ -140,7 +170,17 @@ export const getProperty = api(
 export const updateProperty = api(
   { method: 'PUT', path: '/api/properties/:id', expose: true, tags: ['properties'] },
   async (params: UpdatePropertyParams): Promise<Property> => {
-    const { id, ...updateData } = params
+    const { id, reason, ...updateData } = params
+
+    // Get the current property to check for rent changes
+    const currentProperty = await prisma.property.findUnique({
+      where: { id },
+      select: { rentPrice: true },
+    })
+
+    if (!currentProperty) {
+      throw new Error(`Property with id ${id} not found`)
+    }
 
     const data: Prisma.PropertyUpdateInput = {
       ...updateData,
@@ -149,9 +189,26 @@ export const updateProperty = api(
       }),
     }
 
-    return await prisma.property.update({
-      where: { id },
-      data,
+    // Use a transaction to ensure both updates happen atomically
+    return await prisma.$transaction(async (tx) => {
+      // If rent price is being updated, create a rent update record
+      if (updateData.rentPrice !== undefined && updateData.rentPrice !== currentProperty.rentPrice) {
+        await tx.properyRentUpdate.create({
+          data: {
+            propertyId: id,
+            updateDate: new Date(),
+            oldRent: currentProperty.rentPrice,
+            newRent: updateData.rentPrice,
+            reason: reason || 'No reason provided',
+          },
+        })
+      }
+
+      // Update the property
+      return tx.property.update({
+        where: { id },
+        data,
+      })
     })
   }
 )
