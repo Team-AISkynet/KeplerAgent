@@ -1,3 +1,3 @@
 import { api } from 'encore.dev/api'
 
-export const assets = api.static({ expose: true, path: '/!path', dir: './assets', notFound: './assets/index.html' })
+export const assets = api.static({ expose: true, path: '/!path', dir: './assets' })
