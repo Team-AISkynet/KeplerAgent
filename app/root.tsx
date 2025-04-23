@@ -76,7 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                           )
                         }
                       >
-                        Properties
+                        Portfolio
                       </NavLink>
                     </SignedIn>
                   </div>
