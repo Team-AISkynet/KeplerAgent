@@ -1,13 +1,33 @@
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from '@clerk/clerk-react'
 import { Link } from 'react-router'
 import { MapIcon, MessageSquareIcon, LineChartIcon, SearchIcon, ZapIcon } from 'lucide-react'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../components/ui/carousel'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from '../components/ui/carousel'
+import { useEffect, useState } from 'react'
 
 export function meta() {
   return [{ title: 'KeepItReal' }, { name: 'description', content: 'Real Estate Chat and Analytics Platform' }]
 }
 
 export default function HomePage() {
+  const [api, setApi] = useState<CarouselApi>()
+
+  useEffect(() => {
+    if (!api) return
+
+    const interval = setInterval(() => {
+      api.scrollNext()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [api])
+
   return (
     <div className='min-h-screen'>
       {/* Hero Section */}
@@ -21,12 +41,12 @@ export default function HomePage() {
         <div className='flex gap-4 justify-center mb-8'>
           <SignedOut>
             <SignInButton mode='modal'>
-              <button className='px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-semibold'>
+              <button className='px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-semibold'>
                 Sign In
               </button>
             </SignInButton>
             <SignUpButton mode='modal'>
-              <button className='px-6 py-3 rounded-lg bg-black/10 backdrop-blur-[1px] hover:bg-black/20 font-semibold border border-border/30'>
+              <button className='px-4 py-2 rounded-lg bg-black/10 backdrop-blur-[1px] hover:bg-black/20 font-semibold border border-border/30'>
                 Sign Up
               </button>
             </SignUpButton>
@@ -44,7 +64,7 @@ export default function HomePage() {
 
       {/* Features Carousel */}
       <div className='container mx-auto px-4 mb-24'>
-        <Carousel className='w-full max-w-5xl mx-auto'>
+        <Carousel className='w-full max-w-5xl mx-auto' setApi={setApi}>
           <CarouselContent>
             {/* Analyze Section */}
             <CarouselItem>
