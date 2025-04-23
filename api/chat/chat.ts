@@ -4,6 +4,27 @@ import { getAuthData } from '~encore/auth'
 import { AIMessage, HumanMessage } from '@langchain/core/messages'
 import { getGraphAgentExecutor } from './agent/graph-agent'
 
+interface ChartArgs {
+  chart_type: 'bar' | 'line'
+  title: string
+  labels: string[]
+  data: number[]
+}
+
+interface Visualization {
+  type: 'tool_call'
+  tool_name: 'draw_chart'
+  args: ChartArgs
+}
+
+interface APIResponse {
+  query: string
+  sql: string
+  result: Array<Record<string, number | string>>
+  visualization: Visualization
+  answer: string
+}
+
 interface InMessage {
   // Text sent by the user
   text: string
@@ -18,7 +39,7 @@ interface OutMessage {
 interface OutAPIMessage {
   // Text to send back to the user
   text: string
-  visualization: any
+  visualization?: Visualization
   isComplete?: boolean
 }
 
@@ -90,6 +111,7 @@ export const ChatAPIStream = api.streamInOut<InMessage, OutAPIMessage>(
       chatHistory.push(userMessage)
 
       try {
+        log.debug('Sending request to API')
         const response = await fetch('https://real-estate-query-api.darkube.app/rent-history', {
           method: 'POST',
           headers: {
@@ -101,11 +123,16 @@ export const ChatAPIStream = api.streamInOut<InMessage, OutAPIMessage>(
           }),
         })
 
+        log.debug('API response code', response.status)
+
         if (!response.ok) {
           throw new Error(`API request failed with status ${response.status}`)
         }
 
         const apiResponse = await response.json()
+
+        log.debug('apiResponse json', apiResponse)
+
         const responseText = apiResponse.answer
 
         // Send the cleaned response
@@ -118,7 +145,7 @@ export const ChatAPIStream = api.streamInOut<InMessage, OutAPIMessage>(
         log.error('Error in ChatStream', { error })
         await stream.send({
           text: 'I apologize, but I encountered an error processing your request. Please try again.',
-          visualization: {},
+          visualization: undefined,
           isComplete: true,
         })
       }

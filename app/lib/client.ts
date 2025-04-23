@@ -94,6 +94,13 @@ export namespace auth {
 }
 
 export namespace chat {
+    export interface ChartArgs {
+        "chart_type": "bar" | "line"
+        title: string
+        labels: string[]
+        data: number[]
+    }
+
     export interface InMessage {
         /**
          * Text sent by the user
@@ -106,6 +113,16 @@ export namespace chat {
          * Text sent by the user
          */
         text: string
+    }
+
+    export interface OutAPIMessage {
+        /**
+         * Text to send back to the user
+         */
+        text: string
+
+        visualization?: Visualization
+        isComplete?: boolean
     }
 
     export interface OutMessage {
@@ -117,6 +134,12 @@ export namespace chat {
         isComplete?: boolean
     }
 
+    export interface Visualization {
+        type: "tool_call"
+        "tool_name": "draw_chart"
+        args: ChartArgs
+    }
+
     export class ServiceClient {
         private baseClient: BaseClient
 
@@ -126,7 +149,7 @@ export namespace chat {
             this.ChatLLMStream = this.ChatLLMStream.bind(this)
         }
 
-        public async ChatAPIStream(): Promise<StreamInOut<InMessage, OutMessage>> {
+        public async ChatAPIStream(): Promise<StreamInOut<InMessage, OutAPIMessage>> {
             return await this.baseClient.createStreamInOut(`/chat-api`)
         }
 
