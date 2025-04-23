@@ -10,7 +10,7 @@ export const chartSlice = createSlice({
   initialState,
   reducers: {
     addChart: (state, action: PayloadAction<ChartData>) => {
-      state.charts.push(action.payload)
+      state.charts.unshift(action.payload)
     },
     removeChart: (state, action: PayloadAction<string>) => {
       state.charts = state.charts.filter((chart) => chart.id !== action.payload)
