@@ -3,6 +3,7 @@ import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@c
 import { cn } from '@/app/lib/utils'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
+import { Home } from 'lucide-react'
 
 import './app.css'
 import ThemeSwitcher from '@/app/components/ThemeSwitcher'
@@ -35,11 +36,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       to='/'
                       className={({ isActive }) =>
                         cn(
-                          'font-bold text-xl tracking-tight',
+                          'font-bold text-xl tracking-tight  flex items-center gap-2 mr-8',
                           isActive && 'dark:text-white text-black border-b-2 border-primary'
                         )
                       }
                     >
+                      <Home className='w-5 h-5' />
                       KeepItReal
                     </NavLink>
                     <SignedIn>

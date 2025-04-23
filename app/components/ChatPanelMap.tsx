@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { ChatBubble, ChatBubbleMessage } from '../components/ui/chat/chat-bubble'
+import { ChatBubble, ChatBubbleMessage } from './ui/chat/chat-bubble'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
   addMessage,
@@ -11,8 +11,6 @@ import {
 } from '../store/chatSlice'
 import { useApi } from './ApiProvider'
 import { Bot, User, Loader2 } from 'lucide-react'
-import { addChart } from '../store/chartSlice'
-import { v4 as uuidv4 } from 'uuid'
 
 // Define the ChatMessage type
 interface ChatMessage {
@@ -22,7 +20,7 @@ interface ChatMessage {
   timestamp: number
 }
 
-export function ChatPanel() {
+export function ChatPanelMap() {
   const dispatch = useAppDispatch()
   const { messages, isConnected, error, pendingMessage } = useAppSelector((state) => state.chat)
   const [inputMessage, setInputMessage] = React.useState('')
@@ -38,7 +36,7 @@ export function ChatPanel() {
 
     const startChat = async () => {
       try {
-        const chatStream = await api.chat.ChatAPIStream()
+        const chatStream = await api.chat.ChatLLMStream()
 
         if (!isSubscribed) {
           chatStream.socket.close()
@@ -74,21 +72,6 @@ export function ChatPanel() {
           if (!msg) break
 
           if (isSubscribed) {
-            // if the message is a visualization, add it to the state
-            if (msg.visualization && msg.visualization.type === 'tool_call') {
-              const v = msg.visualization!
-              dispatch(
-                addChart({
-                  id: uuidv4(),
-                  type: v.args.chart_type as 'line' | 'bar',
-                  labels: v.args.labels,
-                  data: v.args.data,
-                  title: v.args.title,
-                  answer: msg.text,
-                })
-              )
-            }
-
             // Clear pending message and add the actual response
             dispatch(setPendingMessage(null))
             dispatch(
@@ -164,7 +147,7 @@ export function ChatPanel() {
       <div className='flex-1 overflow-y-auto p-3 space-y-3'>
         {messages.length === 0 && (
           <div className='flex items-center justify-center h-full'>
-            <p className='text-foreground/50 text-sm'>Start with a question about your properties...</p>
+            <p className='text-foreground/50 text-sm'>Start with a question about properties....</p>
           </div>
         )}
         {messages.map((message: ChatMessage) => (

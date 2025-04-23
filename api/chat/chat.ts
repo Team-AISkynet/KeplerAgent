@@ -52,12 +52,6 @@ export const ChatLLMStream = api.streamInOut<InMessage, OutMessage>(
     const user = getAuthData()!
     const chatHistory: (HumanMessage | AIMessage)[] = []
 
-    log.info('ChatStream sending welcome message', { user })
-    await stream.send({
-      text: `Hi! I'm your AI assistant. I can help you with information and answer questions.`,
-      isComplete: true,
-    })
-
     for await (const chatMessage of stream) {
       log.info('ChatStream received message', { chatMessage })
 
@@ -96,13 +90,6 @@ export const ChatAPIStream = api.streamInOut<InMessage, OutAPIMessage>(
   async (stream) => {
     const user = getAuthData()!
     const chatHistory: (HumanMessage | AIMessage)[] = []
-
-    log.info('ChatStream sending welcome message', { user })
-    await stream.send({
-      text: `Hi! I'm your AI assistant. I can help you with information and answer questions.`,
-      visualization: {},
-      isComplete: true,
-    })
 
     for await (const chatMessage of stream) {
       log.info('ChatStream received message', { chatMessage })

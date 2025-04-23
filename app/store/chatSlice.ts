@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { StreamInOut } from '../lib/client'
 import { chat } from '../lib/client'
+import { AppDispatch, RootState } from './store'
 
 interface ChatMessage {
   id: string
@@ -14,6 +15,7 @@ interface ChatState {
   isConnected: boolean
   error: string | null
   stream: StreamInOut<chat.InMessage, chat.OutMessage> | null
+  pendingMessage: ChatMessage | null
 }
 
 const initialState: ChatState = {
@@ -21,6 +23,7 @@ const initialState: ChatState = {
   isConnected: false,
   error: null,
   stream: null,
+  pendingMessage: null,
 }
 
 export const chatSlice = createSlice({
@@ -42,6 +45,9 @@ export const chatSlice = createSlice({
     setStream: (state, action: PayloadAction<StreamInOut<chat.InMessage, chat.OutMessage> | null>) => {
       state.stream = action.payload
     },
+    setPendingMessage: (state, action: PayloadAction<ChatMessage | null>) => {
+      state.pendingMessage = action.payload
+    },
     // Action creator for the middleware to handle
     sendToStream: (state, action: PayloadAction<chat.InMessage>) => {
       // The actual sending is handled by the middleware
@@ -49,11 +55,12 @@ export const chatSlice = createSlice({
   },
 })
 
-export const { addMessage, setConnectionStatus, setError, clearMessages, setStream, sendToStream } = chatSlice.actions
+export const { addMessage, setConnectionStatus, setError, clearMessages, setStream, sendToStream, setPendingMessage } =
+  chatSlice.actions
 
 // Thunk for sending messages
-export const sendMessage = (message: string) => async (dispatch: any, getState: any) => {
-  const state = getState().chat
+export const sendMessage = createAsyncThunk('chat/sendMessage', async (message: string, { dispatch, getState }) => {
+  const state = (getState() as RootState).chat
   if (!state.stream) {
     dispatch(setError('No active chat connection'))
     return
@@ -66,13 +73,22 @@ export const sendMessage = (message: string) => async (dispatch: any, getState: 
     timestamp: Date.now(),
   }
 
+  const pendingMessage = {
+    id: 'pending-' + Date.now().toString(),
+    content: '',
+    role: 'assistant' as const,
+    timestamp: Date.now(),
+  }
+
   try {
     dispatch(addMessage(newMessage))
+    dispatch(setPendingMessage(pendingMessage))
     dispatch(sendToStream({ text: message }))
   } catch (error) {
     console.error('Failed to send message:', error)
     dispatch(setError('Failed to send message'))
+    dispatch(setPendingMessage(null))
   }
-}
+})
 
 export default chatSlice.reducer

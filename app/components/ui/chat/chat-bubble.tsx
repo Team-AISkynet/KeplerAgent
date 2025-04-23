@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/app/lib/utils'
 import { Avatar, AvatarImage, AvatarFallback } from '@/app/components/ui/avatar'
 import MessageLoading from './message-loading'
-import { Button } from '../button'
+import { Button, buttonVariants } from '../button'
 
 // ChatBubble
 const chatBubbleVariant = cva('flex gap-2 max-w-[60%] items-end relative group', {
@@ -113,9 +113,11 @@ const ChatBubbleTimestamp: React.FC<ChatBubbleTimestampProps> = ({ timestamp, cl
 )
 
 // ChatBubbleAction
-type ChatBubbleActionProps = ButtonProps & {
-  icon: React.ReactNode
-}
+type ChatBubbleActionProps = React.ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants> & {
+    icon: React.ReactNode
+    asChild?: boolean
+  }
 
 const ChatBubbleAction: React.FC<ChatBubbleActionProps> = ({
   icon,

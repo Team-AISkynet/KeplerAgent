@@ -1,5 +1,5 @@
 import { AuthMiddleware } from '../components/AuthMiddleware'
-import { ChatPanel } from '../components/ChatPanel'
+import { ChatPanelMap } from '../components/ChatPanelMap'
 
 export default function ChatPage() {
   return (
@@ -7,7 +7,7 @@ export default function ChatPage() {
       <div className='flex h-screen relative'>
         {/* Left side panel */}
         <div className='fixed top-16 left-4 w-[400px] border-r border-border/30 bg-black/5 backdrop-blur-[1px] z-10 rounded-2xl h-[calc(100vh-5rem)]'>
-          <ChatPanel />
+          <ChatPanelMap />
         </div>
 
         {/* Main content area */}

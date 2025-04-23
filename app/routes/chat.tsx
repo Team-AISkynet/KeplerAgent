@@ -1,7 +1,7 @@
 import { AuthMiddleware } from '../components/AuthMiddleware'
 import { ChatPanel } from '../components/ChatPanel'
 import { ChartCard } from '../components/ChartCard'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { addChart } from '../store/chartSlice'
 import { RootState } from '../store/store'
 import { v4 as uuidv4 } from 'uuid'
@@ -13,10 +13,10 @@ import exampleLineData from '../../api/data/testdata/example-llm-line.json'
 import exampleBarData from '../../api/data/testdata/example-llm-bar.json'
 import { ChartData } from '../store/types'
 import { Button } from '../components/ui/button'
-import { addMessage, sendMessage } from '../store/chatSlice'
-
+import { sendMessage } from '../store/chatSlice'
+import { useAppDispatch } from '../store/hooks'
 export default function ChatPage() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const charts = useSelector((state: RootState) => state.charts.charts)
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
 
@@ -53,19 +53,7 @@ export default function ChatPage() {
   }
 
   const handleTryQuestion = (question: string) => {
-    dispatch({
-      type: 'chat/sendToStream',
-      payload: { text: question },
-    })
-
-    dispatch(
-      addMessage({
-        id: Date.now().toString(),
-        content: question,
-        role: 'user',
-        timestamp: Date.now(),
-      })
-    )
+    void dispatch(sendMessage(question))
   }
 
   return (
