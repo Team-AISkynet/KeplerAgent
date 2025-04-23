@@ -13,7 +13,7 @@ import exampleLineData from '../../api/data/testdata/example-llm-line.json'
 import exampleBarData from '../../api/data/testdata/example-llm-bar.json'
 import { ChartData } from '../store/types'
 import { Button } from '../components/ui/button'
-import { addMessage } from '../store/chatSlice'
+import { addMessage, sendMessage } from '../store/chatSlice'
 
 export default function ChatPage() {
   const dispatch = useDispatch()
@@ -53,6 +53,11 @@ export default function ChatPage() {
   }
 
   const handleTryQuestion = (question: string) => {
+    dispatch({
+      type: 'chat/sendToStream',
+      payload: { text: question },
+    })
+
     dispatch(
       addMessage({
         id: Date.now().toString(),
