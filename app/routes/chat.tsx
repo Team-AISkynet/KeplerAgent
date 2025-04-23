@@ -126,7 +126,7 @@ export default function ChatPage() {
                 </div>
               </div>
             ) : (
-              charts.map((chart: ChartData) => <ChartCard key={chart.id} chart={chart} />)
+              charts.reverse().map((chart: ChartData) => <ChartCard key={chart.id} chart={chart} />)
             )}
           </div>
         </div>
