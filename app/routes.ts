@@ -9,5 +9,6 @@ export default [
   layout('./components/AuthMiddleware.tsx', [
     route('chat', './routes/chat.tsx'),
     route('chatmap', './routes/chat-map.tsx'),
+    route('properties', './routes/properties.tsx'),
   ]),
 ] satisfies RouteConfig

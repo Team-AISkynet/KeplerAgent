@@ -67,6 +67,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       >
                         Chat Map
                       </NavLink>
+                      <NavLink
+                        to='/properties'
+                        className={({ isActive }) =>
+                          cn(
+                            'text-foreground/80 hover:text-foreground',
+                            isActive && 'dark:text-white text-black border-b-2 border-primary'
+                          )
+                        }
+                      >
+                        Properties
+                      </NavLink>
                     </SignedIn>
                   </div>
                   <div className='flex items-center gap-4'>

@@ -15,6 +15,7 @@ import { ChartData } from '../store/types'
 import { Button } from '../components/ui/button'
 import { sendMessage } from '../store/chatSlice'
 import { useAppDispatch } from '../store/hooks'
+
 export default function ChatPage() {
   const dispatch = useAppDispatch()
   const charts = useSelector((state: RootState) => state.charts.charts)
