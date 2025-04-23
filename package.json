@@ -36,6 +36,7 @@
     "@radix-ui/react-navigation-menu": "^1.2.9",
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-switch": "^1.2.2",
+    "@radix-ui/react-tabs": "^1.1.9",
     "@react-router/dev": "^7.5.1",
     "@react-router/node": "^7.5.1",
     "@reduxjs/toolkit": "^2.7.0",

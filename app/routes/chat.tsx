@@ -6,13 +6,14 @@ import { addChart } from '../store/chartSlice'
 import { RootState } from '../store/store'
 import { v4 as uuidv4 } from 'uuid'
 import { useState } from 'react'
+import { QuestionTabs } from '../components/QuestionTabs'
 
 // Example data import - in production this would come from your API
 import exampleLineData from '../../api/data/testdata/example-llm-line.json'
 import exampleBarData from '../../api/data/testdata/example-llm-bar.json'
 import { ChartData } from '../store/types'
 import { Button } from '../components/ui/button'
-import { Card, CardContent } from '../components/ui/card'
+import { addMessage } from '../store/chatSlice'
 
 export default function ChatPage() {
   const dispatch = useDispatch()
@@ -52,21 +53,15 @@ export default function ChatPage() {
   }
 
   const handleTryQuestion = (question: string) => {
-    // Here you would dispatch an action to populate the chat input
-    console.log('Trying question:', question)
-    // TODO: Implement chat population logic
+    dispatch(
+      addMessage({
+        id: Date.now().toString(),
+        content: question,
+        role: 'user',
+        timestamp: Date.now(),
+      })
+    )
   }
-
-  const starterQuestions = [
-    'Plot the monthly rental-price change (%) for Downtown Dubai over the past 12 months.',
-    'Show a time-series of vacancy-rate trends for Business Bay during Q1 2025.',
-    'Display days-on-market trends for 3BR listings in Dubai Marina over the last 6 months.',
-    'Compare new-listing velocity vs. vacancy-rate change for Al Barsha and JLT on one chart.',
-    'Which neighborhoods had the highest rental-price growth last quarter?',
-    'What areas are currently emerging as rental-hotspots?',
-    'How have citywide vacancy rates shifted over the past month?',
-    "What's driving the fastest changes in days-on-market trends?",
-  ]
 
   return (
     <AuthMiddleware>
@@ -95,35 +90,11 @@ export default function ChatPage() {
                   To get started you can ask any question you like, or try these starters:
                 </h2>
 
-                {/* TrendSpotter Section */}
-                <div className='space-y-4'>
-                  <h3 className='text-lg font-medium px-2'>TrendSpotter</h3>
-                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-                    {starterQuestions.map((question, index) => (
-                      <Card
-                        key={index}
-                        className='relative group cursor-pointer'
-                        onMouseEnter={() => setHoveredCard(index)}
-                        onMouseLeave={() => setHoveredCard(null)}
-                      >
-                        <CardContent className='pt-6'>
-                          <p className={`${index < 4 ? 'font-medium' : ''} group-hover:opacity-50 transition-opacity`}>
-                            {question}
-                          </p>
-                          <div
-                            className={`absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/5 transition-all ${
-                              hoveredCard === index ? 'opacity-100' : 'opacity-0'
-                            }`}
-                          >
-                            <Button variant='secondary' className='z-10' onClick={() => handleTryQuestion(question)}>
-                              Try this
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
+                <QuestionTabs
+                  onTryQuestion={handleTryQuestion}
+                  hoveredCard={hoveredCard}
+                  setHoveredCard={setHoveredCard}
+                />
               </div>
             ) : (
               charts.reverse().map((chart: ChartData) => <ChartCard key={chart.id} chart={chart} />)
