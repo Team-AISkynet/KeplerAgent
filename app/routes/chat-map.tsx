@@ -1,5 +1,9 @@
 import { AuthMiddleware } from '../components/AuthMiddleware'
 import { ChatPanelMap } from '../components/ChatPanelMap'
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
+import KeplerGl from '@kepler.gl/components'
+
+const MAPBOX_TOKEN = process.env.VITE_MAPBOX_TOKEN
 
 export default function ChatPage() {
   return (
@@ -12,7 +16,16 @@ export default function ChatPage() {
 
         {/* Main content area */}
         <div className='flex-1 p-6 relative z-10 ml-[432px]'>
-          <h1 className='text-2xl font-bold mb-4'>Space for Map or Charts</h1>
+          <AutoSizer>
+            {({ height, width }) => (
+              <KeplerGl
+                mapboxApiAccessToken={MAPBOX_TOKEN} // Replace with your mapbox token
+                id='map'
+                width={width}
+                height={height}
+              />
+            )}
+          </AutoSizer>
         </div>
       </div>
     </AuthMiddleware>
