@@ -186,6 +186,22 @@ export namespace data {
         properties: Property[]
     }
 
+    export interface ListPropertyUpdatesResponse {
+        updates: {
+            id: number
+            propertyId: number
+            updateDate: string
+            oldRent: number
+            newRent: number
+            reason: string
+            property: {
+                address1: string
+                area: string
+                city: string
+            }
+        }[]
+    }
+
     export interface Property {
         id: number
         address1: string
@@ -230,6 +246,7 @@ export namespace data {
             this.createProperty = this.createProperty.bind(this)
             this.getProperty = this.getProperty.bind(this)
             this.listProperties = this.listProperties.bind(this)
+            this.listPropertyUpdates = this.listPropertyUpdates.bind(this)
             this.regions = this.regions.bind(this)
             this.removeProperty = this.removeProperty.bind(this)
             this.updateProperty = this.updateProperty.bind(this)
@@ -273,6 +290,27 @@ export namespace data {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI("GET", `/api/properties`)
             return await resp.json() as ListPropertiesResponse
+        }
+
+        /**
+         * Retrieves the last N property updates, ordered by update date.
+         * @api {GET} /properties/updates List Property Updates
+         * @apiDescription Get a list of recent property updates with an optional limit
+         * @param {Object} params - The query parameters
+         * @param {number} params.limit - Maximum number of updates to return (optional, defaults to 10)
+         * @returns {Promise<ListPropertyUpdatesResponse>} Object containing array of property updates
+         */
+        public async listPropertyUpdates(params: {
+    limit?: number
+}): Promise<ListPropertyUpdatesResponse> {
+            // Convert our params into the objects we need for the request
+            const query = makeRecord<string, string | string[]>({
+                limit: params.limit === undefined ? undefined : String(params.limit),
+            })
+
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("GET", `/api/properties/updates`, undefined, {query})
+            return await resp.json() as ListPropertyUpdatesResponse
         }
 
         public async regions(method: "GET", name: string, body?: BodyInit, options?: CallParameters): Promise<globalThis.Response> {

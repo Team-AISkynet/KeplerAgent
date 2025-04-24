@@ -85,6 +85,26 @@ type UpdatePropertyParams = {
 } & Partial<Omit<CreatePropertyParams, 'id'>>
 
 /**
+ * Response type for listing property updates
+ * @interface ListPropertyUpdatesResponse
+ */
+interface ListPropertyUpdatesResponse {
+  updates: {
+    id: number
+    propertyId: number
+    updateDate: Date
+    oldRent: number
+    newRent: number
+    reason: string
+    property: {
+      address1: string
+      area: string
+      city: string
+    }
+  }[]
+}
+
+/**
  * Creates a new property in the database.
  * @api {POST} /properties Create Property
  * @apiDescription Create a new property with the provided details
@@ -228,5 +248,41 @@ export const removeProperty = api(
     return await prisma.property.delete({
       where: { id },
     })
+  }
+)
+
+/**
+ * Retrieves the last N property updates, ordered by update date.
+ * @api {GET} /properties/updates List Property Updates
+ * @apiDescription Get a list of recent property updates with an optional limit
+ * @param {Object} params - The query parameters
+ * @param {number} params.limit - Maximum number of updates to return (optional, defaults to 10)
+ * @returns {Promise<ListPropertyUpdatesResponse>} Object containing array of property updates
+ */
+export const listPropertyUpdates = api(
+  {
+    method: 'GET',
+    expose: true,
+    path: '/api/properties/updates',
+    tags: ['properties'],
+  },
+  async ({ limit = 10 }: { limit?: number }): Promise<ListPropertyUpdatesResponse> => {
+    const updates = await prisma.properyRentUpdate.findMany({
+      take: Math.min(Math.max(1, limit), 100), // Ensure limit is between 1 and 100
+      orderBy: {
+        updateDate: 'desc',
+      },
+      include: {
+        property: {
+          select: {
+            address1: true,
+            area: true,
+            city: true,
+          },
+        },
+      },
+    })
+
+    return { updates }
   }
 )
