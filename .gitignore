@@ -11,3 +11,5 @@ node_modules
 /build/
 /api/frontend/build/
 /api/frontend/assets/
+
+.env.*
